@@ -1,5 +1,6 @@
 import { signIn } from './signin.js'
 import { decaptcha } from './decaptcha.js'
+import { NTHUAISError, RetryableError } from '$lib/errors.js'
 
 export let retryer = async (studentID: string, password: string) => {
   
@@ -15,18 +16,24 @@ export let retryer = async (studentID: string, password: string) => {
         capAns = captchaAns
         break
       }
+      else {
+        decaptchaTries--
+      }
     }
     catch (error) {
-      decaptchaTries--
+      if (error instanceof RetryableError) {
+        decaptchaTries--
+        continue
+      }
+      throw error
     }
   }
 
-  if (decaptchaTries === 0) {
-    throw new Error('Decaptcha error')
+  if (decaptchaTries <= 0) {
+    throw new NTHUAISError('Decaptcha: Failed to get captcha')
   }
 
   let signInTries = 3
-
   while (signInTries > 0) {
     try {
       const { ACIXSTORE } = await signIn(studentID, password, capStr, capAns)
@@ -39,12 +46,18 @@ export let retryer = async (studentID: string, password: string) => {
       }
     }
     catch (error) {
-      signInTries--
+      if (error instanceof RetryableError) {
+        signInTries--
+        continue
+      }
+      throw error
     }
   }
 
   if (signInTries === 0) {
-    throw new Error('Sign in error')
+    throw new NTHUAISError('SignIn: Failed to sign in')
   }
+
+  throw new NTHUAISError('Unknown error')
 
 }

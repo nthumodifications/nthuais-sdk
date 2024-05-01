@@ -1,4 +1,5 @@
 import { baseUrl, ocrUrl } from "./const.js"
+import { RetryableError } from "$lib/errors.js"
 
 export const decaptcha = async () => {
   try {
@@ -6,13 +7,13 @@ export const decaptcha = async () => {
     const body = await response.text()
     
     if (!body) {
-      throw new Error('Empty response')
+      throw new RetryableError('Decaptcha: Empty response body of base URL')
     }
 
     const bodyMatch = body.match(/auth_img\.php\?pwdstr=([a-zA-Z0-9_-]+)/)
 
     if (!bodyMatch) {
-      throw new Error('No captcha image')
+      throw new RetryableError('Decaptcha: No captcha image URL found')
     }
 
     const captchaStr = bodyMatch[1]

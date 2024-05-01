@@ -9,7 +9,5 @@
 </form>
 
 {#if form}
-  <pre>
-    {JSON.stringify(form, null, 2)}
-  </pre>
+  <pre>{JSON.stringify(form, null, 2)}</pre>
 {/if}
