@@ -24,7 +24,7 @@ export const signIn = async (studentID: string, password: string, captchaStr: st
         return text
       })
 
-    console.log('ResponseHTML: ', responseHTML)
+    // console.log('ResponseHTML: ', responseHTML)
 
     const redirectMatch = responseHTML.match(
       /url=(select_entry\.php\?ACIXSTORE=[a-zA-Z0-9_-]+&hint=[0-9]+)/
@@ -42,7 +42,7 @@ export const signIn = async (studentID: string, password: string, captchaStr: st
         return text
       })
 
-    console.log('NewResponseHTML: ', newResponseHTML)
+    // console.log('NewResponseHTML: ', newResponseHTML)
 
     if (responseHTML.match('驗證碼輸入錯誤!')) {
       throw new RetryableError('Signin: Wrong captcha')
