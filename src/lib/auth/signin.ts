@@ -78,25 +78,25 @@ export const signIn = async (studentID: string, password: string, captchaStr: st
       throw new RetryableError('Signin: ACIXSTORE error')
     }
 
-    const topResponse = await fetch(
-      topUrl(studentID, ACIXSTORE),
-      topSettings()
-    )
+    // const topResponse = await fetch(
+    //   topUrl(studentID, ACIXSTORE),
+    //   topSettings()
+    // )
 
-    const inInqStdResponse = await fetch(
-      inInqStdUrl(ACIXSTORE),
-      inInqStdSettings()
-    )
+    // const inInqStdResponse = await fetch(
+    //   inInqStdUrl(ACIXSTORE),
+    //   inInqStdSettings()
+    // )
 
-    const xp03MResponse = await fetch(
-      xp03MUrl(ACIXSTORE),
-      xp03MSettings()
-    )
+    // const xp03MResponse = await fetch(
+    //   xp03MUrl(ACIXSTORE),
+    //   xp03MSettings()
+    // )
 
-    const timeResponse = await fetch(
-      timeUrl(studentID, ACIXSTORE),
-      timeSettings()
-    )
+    // const timeResponse = await fetch(
+    //   timeUrl(studentID, ACIXSTORE),
+    //   timeSettings()
+    // )
 
     return {
       ACIXSTORE: ACIXSTORE

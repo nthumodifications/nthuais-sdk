@@ -1,5 +1,6 @@
 import NTHUAIS from '$lib/client.js'
 import { fail } from '@sveltejs/kit'
+import { inflateRaw } from 'zlib';
 
 export const actions = {
   signin: async ({ request, cookies }) => {
@@ -12,10 +13,10 @@ export const actions = {
 
     try {
       await client.signin(studentID, password)
-      cookies.set('NTHUAISAuth', JSON.stringify(client.auth), { path: '/' })
-      return {
+      cookies.set('NTHUAISAuth', JSON.stringify(client.getAuth()), { path: '/' })
+      return {  
         success: true,
-        body: client.auth
+        body: client.getAuth()
       }
     }
     catch (error: any) {
@@ -23,12 +24,23 @@ export const actions = {
     }
   },
 
+  
   getTranscript: async ({ request, cookies }) => {
-    const auth = cookies.get('NTHUAISAuth')
-    if (!auth) return fail(400, { message: 'Not signed in' })
+
+    const raw = cookies.get('NTHUAISAuth')
+    if (!raw) return fail(400, { message: 'Not signed in' })
 
     const client = new NTHUAIS()
-    client.auth = JSON.parse(auth)
+
+    let auth = null
+    try {
+      auth = JSON.parse(raw)
+      client.setAuth(auth)
+    }
+    catch (error: any) {
+      cookies.delete('NTHUAISAuth', { path: '/' })
+      return fail(400, error.message)
+    }
 
     try {
       const transcript = await client.getTranscript()
@@ -41,4 +53,4 @@ export const actions = {
       return fail(400, error.message)
     }
   }
-};
+}

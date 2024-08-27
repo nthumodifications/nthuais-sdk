@@ -41,8 +41,9 @@ export let retryer = async (studentID: string, password: string) => {
         ACIXSTORE: ACIXSTORE,
         studentID: studentID,
         password: password,
-        captchaStr: capStr,
-        captchaAns: capAns
+        // captchaStr: capStr,
+        // captchaAns: capAns,
+        updated: new Date().toISOString()
       }
     }
     catch (error) {
